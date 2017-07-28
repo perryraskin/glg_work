@@ -52,4 +52,4 @@ def id_text_sample(rowstream):
     for row in rowstream:
         yield {'id': row[0], 'text': ' '.join(row[1:])}
 def say_hi():
-  display('hello')
+  print 'hello'
