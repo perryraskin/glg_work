@@ -49,7 +49,7 @@ as
   join cte_pss pss on mcmsr.created_by = pss.user_id
   where mcmsr.create_date > @beta_start
 )
----------//--------- All scheduling done by pss after recieving the requets --------------------
+---------//--------- All scheduling done by pss after receiving the requets --------------------
 ,cte_request_scheduling_activity_by_pss
   as
 (
@@ -150,8 +150,10 @@ group by p.created_by
     group by DATEADD(Week, DATEDIFF(week, 0, create_date), -1), email
   )
 
-select s.week as Week, pss.Pss_Name AS PSS_Member_Name
-, s.email as PSS_Member_Email,
+select 
+s.week as Week, 
+pss.Pss_Name AS PSS_Member_Name, 
+s.email as PSS_Member_Email,
 isnull(r.requestCount,0) as Total_Requests_Recieved,
 s.scheduleCount as Total_Scheduled_Calls, 
 s.count as Unique_Calls_Scheduled,
@@ -163,4 +165,5 @@ isnull(req.Third_Turnaround,0) as Third_Schedule_Avg_Turmaround_In_Hours
   left join cte_pss pss ON pss.email = s.email
   left join request_assigned req ON req.Created_by = pss.User_id and req.week = s.week
   where s.week <= getdate()
-  order by s.week, pss.Pss_name asc
+  --group by pss.email
+  --order by Total_Scheduled_Calls desc
